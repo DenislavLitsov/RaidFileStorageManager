@@ -1,12 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RaidFileStorageManager.Domain
+﻿namespace RaidFileStorageManager.Domain
 {
-    internal class MetaData
+    [Serializable]
+    public class MetaData<SortParameterType>
+        where SortParameterType : struct
     {
+        public MetaData()
+        {
+        }
+
+        public int FileCount { get; set; }
+
+        public SortParameterType FirstSortValue { get; set; }
+
+        public SortParameterType LastSortValue { get; set; }
+
+        public IEnumerable<FileMetaData<SortParameterType>> FilesMetaData { get; set; }
     }
 }

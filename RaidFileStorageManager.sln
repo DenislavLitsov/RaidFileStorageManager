@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaidFileStorageManager", "RaidFileStorageManager\RaidFileStorageManager.csproj", "{7E7333F2-ABA0-4BB1-A558-BE8257EE13AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaidFileStorageManager.Console", "RaidFileStorageManager.Console\RaidFileStorageManager.Console.csproj", "{8D2D1B2F-94BC-45ED-9169-27FFDE1C2BA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaidFileStorageManager.Sandbox", "RaidFileStorageManager.Console\RaidFileStorageManager.Sandbox.csproj", "{8D2D1B2F-94BC-45ED-9169-27FFDE1C2BA6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaidFileStorageManager.Tests", "RaidFileStorageManager.Tests\RaidFileStorageManager.Tests.csproj", "{F18DEE36-59A1-4BB7-A874-F8219CE82976}"
 EndProject
