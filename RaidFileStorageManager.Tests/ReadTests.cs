@@ -1,7 +1,13 @@
+using RaidFileStorageManager.Tests.Data;
+
 namespace RaidFileStorageManager.Tests
 {
     public class ReadTests
     {
+
+        private RaidFileStorageManager<DateTimeData, DateTime> dateTimeRaidManager;
+        private RaidFileStorageManager<IndexData, int> indexRaidManager;
+
         [SetUp]
         public void Setup()
         {
