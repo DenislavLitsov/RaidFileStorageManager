@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace RaidFileStorageManager
 {
-    public class RaidFileStorageManager<ArrayDataType, SortParameterType> 
+    public class RaidFileStorageManager<ArrayDataType, SortParameterType>
         where SortParameterType : struct
         where ArrayDataType : class, IRaidDataType<SortParameterType>
     {
@@ -71,6 +71,67 @@ namespace RaidFileStorageManager
             this.SaveMetaData();
         }
 
+        public IEnumerable<ArrayDataType> GetDataByChunks(int startChunk, int chunkCount)
+        {
+            List<ArrayDataType> result = new List<ArrayDataType>();
+            for (int i = startChunk; i < startChunk + chunkCount; i++)
+            {
+                var loadedChunk = this.LoadChunk(i);
+                result.AddRange(loadedChunk);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="startIndex">Included</param>
+        /// <param name="endIndex">Excluded</param>
+        /// <returns></returns>
+        public IEnumerable<ArrayDataType> GetDataByCount(int startIndex, int endIndex)
+        {
+            List<ArrayDataType> result = new List<ArrayDataType>();
+            int startChunk = startIndex / this.metaData.ChunkSize;
+            int lastChunk = endIndex / this.metaData.ChunkSize;
+
+            int skipCount = startIndex - ((startIndex / this.metaData.ChunkSize) * this.metaData.ChunkSize);
+            var firstChunk = this.LoadChunk(startChunk)
+                .Skip(skipCount)
+                .ToList();
+
+            if (firstChunk.Count <= endIndex-startIndex)
+            {
+                firstChunk = firstChunk
+                    .Take(endIndex - startIndex)
+                    .ToList();
+
+                return firstChunk;
+            }
+
+            result.AddRange(firstChunk);
+
+            for (int i = startChunk + 1; i <= lastChunk; i++)
+            {
+                var loadedChunk = this.LoadChunk(i);
+                result.AddRange(loadedChunk);
+            }
+
+            if (result.Count <= endIndex - startIndex)
+            {
+                result = result
+                    .Take(endIndex - startIndex)
+                    .ToList();
+            }
+
+            return result;
+        }
+
+        public IEnumerable<ArrayDataType> GetDataSortParameter(int startChunk, int lastChunk)
+        {
+            throw new NotImplementedException();
+        }
+
         private void SaveMetaData()
         {
             var serializedMetaData = JsonSerializer.Serialize(this.metaData);
@@ -89,6 +150,15 @@ namespace RaidFileStorageManager
                 streamWriter.Write(serializedData);
                 streamWriter.Flush();
             }
+        }
+
+        private IEnumerable<ArrayDataType> LoadChunk(int index)
+        {
+            var path = Path.Combine(this.raidFolderLocation, $"{index}{RaidExtension}");
+            var data = File.ReadAllText(path);
+
+            var parsedData = JsonSerializer.Deserialize<IEnumerable<ArrayDataType>>(data);
+            return parsedData;
         }
 
         private void LoadMetaData()
